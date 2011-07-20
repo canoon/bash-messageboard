@@ -1,17 +1,21 @@
 #!/bin/bash
 
 http::parse_request() {
-  http::read req_line
-
+  if ! http::read req_line; then
+	return 1
+  fi
   req_line=($req_line)
   export REQUEST_METHOD=${req_line[0]}
 
   export REQUEST_URI=${req_line[1]}
   export REQUEST_PATH=${REQUEST_URI%%\?*}
-  export QUERY_STRING=${REQUEST_URI#*\?}
+  if [ $REQUEST_PATH == $REQUEST_URI ]; then
+    export QUERY_STRING=""
+  else
+    export QUERY_STRING=${REQUEST_URI#*\?}
+  fi
 
   export HTTP_VERSION=${req_line[2]}
-
   export SERVER_SOFTWARE="balls/0.0"
 
   declare -A HEADERS

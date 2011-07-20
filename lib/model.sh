@@ -88,7 +88,7 @@ balls::model.table_name() {
 }
 
 balls::model.execute() {
-  mysql $BALLS_DB_CREDENTIALS "$BALLS_DB" -e "$@" | tail -n+2 |\
+  mysql "$BALLS_DB" -c "$@" | tail -n+3 | head -n-2 |\
     sed 's/NULL//g'
 }
 
